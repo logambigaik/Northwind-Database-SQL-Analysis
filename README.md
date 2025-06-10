@@ -4,7 +4,11 @@
 First, I examined the structure of two key tables:
 - **categories** - Contains product category information
 - **customers** - Stores customer data including names and contact details
-
+```sql
+  use northwind;
+desc categories;
+desc customers;
+```
 
 ## 🔎 Filtering & Pattern Matching
 These queries demonstrate how to find specific customer patterns:
