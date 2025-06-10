@@ -1,117 +1,139 @@
-# Northwind Database SQL Analysis
+# Northwind Database SQL Script Collection
 
-![Northwind ER Diagram](https://github.com/yourusername/yourrepo/raw/main/northwind_er_diagram.png) *(Optional: Add ER diagram image if available)*
+## 🔍 Basic Queries
+USE northwind;
+DESC categories;
+DESC customers;
 
-## Project Overview
-This repository contains SQL queries analyzing the Northwind Traders database - a sample database containing sales data for a fictitious specialty foods export/import company. The workbook covers customer analysis, product performance, order patterns, and business operations metrics.
+text
 
-## Key Analysis Areas
-
-### 1. Customer Insights
-```sql
--- Find customers by name patterns
+## 🔎 Filtering & Pattern Matching
+-- Customers starting with 'A'
 SELECT * FROM customers WHERE CustomerName LIKE 'a%';
+
+-- Customers ending with 'a'
 SELECT * FROM customers WHERE CustomerName LIKE '%a';
+
+-- Pattern: Q followed by any char then 'e'
 SELECT * FROM customers WHERE CustomerName LIKE "Q_e%";
 
+text
+
+## 🤝 Joins & Relationships
+-- Tokyo Traders products
+SELECT p.*
+FROM products p
+INNER JOIN suppliers s ON p.supplierid = s.supplierid
+WHERE s.suppliername = 'Tokyo Traders'
+ORDER BY p.productname;
+
 -- Customers without orders
-SELECT a.*, b.*
-FROM customers AS a
-LEFT JOIN orders AS b ON a.customerId = b.customerId
-WHERE b.orderid IS NULL;
+SELECT c., o.
+FROM customers c
+LEFT JOIN orders o ON c.customerId = o.customerId
+WHERE o.orderid IS NULL;
 
--- Customer distribution by country
-SELECT COUNT(*) 'Customers#', country
+-- Full customer-order relationship (UNION implementation)
+SELECT * FROM customers
+LEFT JOIN orders USING(CustomerID)
+WHERE orders.CustomerID IS NOT NULL
+UNION
+SELECT * FROM customers
+RIGHT JOIN orders USING(CustomerID)
+WHERE customers.CustomerID IS NOT NULL;
+
+text
+
+## 📊 Aggregation & Grouping
+-- Country-city distribution
+SELECT
+COUNT(DISTINCT city) AS 'UniqueCities',
+country
 FROM customers
-GROUP BY country
-ORDER BY 'Customers#' DESC;
-
--- Products never ordered
-SELECT *
-FROM products AS p
-LEFT JOIN order_details AS od ON p.productid = od.productid
-WHERE od.orderid IS NULL;
-
--- Product category mapping
-SELECT p.ProductName, c.CategoryName
-FROM products p
-JOIN categories c ON p.CategoryID = c.CategoryID;
-
--- Meat/Poultry products
-SELECT p.ProductName, c.CategoryName
-FROM products p
-JOIN categories c ON p.CategoryID = c.CategoryID
-WHERE c.CategoryName='Meat/Poultry';
-
--- Top selling products by revenue
-SELECT 
-    p.ProductName, 
-    SUM(od.quantity * p.price) AS sales
-FROM products AS p
-INNER JOIN order_details AS od ON p.productid = od.productid
-GROUP BY p.ProductName
-ORDER BY sales DESC;
-
--- Category-wise sales volume
-SELECT 
-    c.CategoryName, 
-    COUNT(CategoryName) AS 'Quantity sold'
-FROM products AS p
-INNER JOIN categories AS c ON p.CategoryID = c.CategoryID
-GROUP BY CategoryName;
-
--- Employee order handling stats
-SELECT 
-    e.EmployeeID, 
-    e.FirstName,
-    COUNT(*) AS 'TotalOrders'
-FROM employees e
-JOIN orders o ON e.EmployeeID = o.EmployeeID
-GROUP BY e.EmployeeID
-ORDER BY e.EmployeeID;
+GROUP BY Country;
 
 -- Shipper performance
-SELECT 
-    Shippers.ShipperName, 
-    COUNT(Orders.OrderID) AS NumberOfOrders 
-FROM Orders
-LEFT JOIN Shippers ON Orders.ShipperID = Shippers.ShipperID
+SELECT
+s.ShipperName,
+COUNT(o.OrderID) AS OrderCount
+FROM Orders o
+LEFT JOIN Shippers s USING(ShipperID)
 GROUP BY ShipperName;
 
--- Tokyo Traders products
-SELECT *
-FROM products
-INNER JOIN suppliers ON products.supplierid = suppliers.supplierid
-WHERE suppliername ='Tokyo Traders'
-ORDER BY products.productname;
+-- Product sales analysis
+SELECT
+p.ProductName,
+SUM(od.quantity) AS TotalUnits,
+SUM(od.quantity * p.price) AS TotalRevenue
+FROM products p
+JOIN order_details od USING(ProductID)
+GROUP BY p.ProductName
+ORDER BY TotalRevenue DESC;
 
--- Supplier-product mapping
-SELECT DISTINCT s.SupplierName, p.ProductName
+text
+
+## 📈 Business Reports
+-- Customer geographic distribution
+SELECT
+COUNT(*) AS CustomerCount,
+country
+FROM customers
+GROUP BY country
+ORDER BY CustomerCount DESC;
+
+-- Category performance
+SELECT
+c.CategoryName,
+COUNT(p.ProductID) AS ProductCount
+FROM categories c
+LEFT JOIN products p USING(CategoryID)
+GROUP BY c.CategoryName;
+
+-- Employee order handling
+SELECT
+e.EmployeeID,
+CONCAT(e.FirstName, ' ', e.LastName) AS Name,
+COUNT(o.OrderID) AS HandledOrders
+FROM employees e
+JOIN orders o USING(EmployeeID)
+GROUP BY e.EmployeeID;
+
+text
+
+## 🔗 Relationship Exploration
+-- Product-supplier catalog
+SELECT DISTINCT
+s.SupplierName,
+p.ProductName
 FROM suppliers s
-JOIN products p ON s.SupplierID = p.SupplierID;
+JOIN products p USING(SupplierID);
 
+-- Complete product info
+SELECT
+p.ProductName,
+c.CategoryName,
+s.SupplierName
+FROM products p
+JOIN categories c USING(CategoryID)
+JOIN suppliers s USING(SupplierID);
 
--- 1996 order analysis
-SELECT 
-    o.OrderID,
-    o.OrderDate,
-    c.CustomerID,
-    c.CustomerName
+-- Order fulfillment details
+SELECT
+o.OrderID,
+o.OrderDate,
+c.CustomerName,
+CONCAT(e.FirstName, ' ', e.LastName) AS Handler
 FROM orders o
-JOIN customers c ON o.CustomerID = c.CustomerID
-WHERE YEAR(o.OrderDate) = 1996;
+JOIN customers c USING(CustomerID)
+JOIN employees e USING(EmployeeID);
 
--- Complete order details view
-SELECT 
-    o.OrderID, 
-    o.OrderDate,
-    c.CustomerName,
-    CONCAT(e.FirstName,' ',e.LastName) AS EmployeeName,
-    p.ProductName,
-    od.Quantity,
-    (od.Quantity * p.Price) AS LineTotal
-FROM orders o
-JOIN customers c ON o.CustomerID = c.CustomerID
-JOIN employees e ON o.EmployeeID = e.EmployeeID
-JOIN order_details od ON o.OrderID = od.OrderID
-JOIN products p ON od.ProductID = p.ProductID;
+text
+
+## 💡 Key Analysis Highlights
+1. **Sales Performance** - Identify top-selling products by revenue
+2. **Customer Distribution** - Geographic spread analysis by country
+3. **Inventory Management** - Products never ordered (left joins with NULL check)
+4. **Employee Productivity** - Order handling metrics per staff member
+5. **Supplier Impact** - Product distribution across suppliers
+
+✨ Tip: Use `EXPLAIN` before queries to analyze execution plans for optimization!
