@@ -2,8 +2,14 @@
 
 ## Database Exploration
 First, I examined the structure of two key tables:
-- **categories** - Contains product category information
-- **customers** - Stores customer data including names and contact details
+- **categories**      - Contains product category information
+- **customers**       - Stores customer data including names and contact details
+- **employees**       - Stores employees data including name, BirthDate, ID, Notes and Photo
+- **order_details**   - Contains order details such as OrderID, ProductID, and Quantity
+- **products**        - Contains product-related data like name, price, quantity per unit, and foreign keys to category and supplier
+- **shippers**        - Holds information about shipping companies used to deliver orders (e.g., name, phone)
+- **suppliers**       - Stores supplier data including company name, contact details, and location
+  
 ```sql
 USE northwind;
 DESC categories;
