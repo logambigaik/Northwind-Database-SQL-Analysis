@@ -4,13 +4,12 @@
 First, I examined the structure of two key tables:
 - **categories** - Contains product category information
 - **customers** - Stores customer data including names and contact details
-- 
+
 
 ## 🔎 Filtering & Pattern Matching
 These queries demonstrate how to find specific customer patterns:
 - Customers starting with 'A' (`LIKE 'a%'`)
-sql
-SELECT * FROM customers WHERE company_name LIKE 'A%';
+<pre> ```sql SELECT name, email FROM users WHERE active = 1; ``` </pre>
 - Customers ending with 'a' (`LIKE '%a'`)
 - Customers with names matching "Q followed by any character then 'e'" (`LIKE "Q_e%"`)
 
