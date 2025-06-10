@@ -13,13 +13,19 @@ First, I examined the structure of two key tables:
 ## 🔎 Filtering & Pattern Matching
 These queries demonstrate how to find specific customer patterns:
 - Customers starting with 'A' (`LIKE 'a%'`)
-```sql SELECT name, email FROM users WHERE active = 1;  ```
+```sql
+   SELECT name, email FROM users WHERE active = 1;
+```
 
 - Customers ending with 'a' (`LIKE '%a'`)
-```sql select * from customers where CustomerName like '%a'; ```
+```sql
+   select * from customers where CustomerName like '%a';
+ ```
 
 - Customers with names matching "Q followed by any character then 'e'" (`LIKE "Q_e%"`)
-```sql select * from customers where CustomerName like "Q_e%";  ```
+```sql
+   select * from customers where CustomerName like "Q_e%";
+```
 
 ## 🤝 Joins & Relationships
 Key relationship queries:
