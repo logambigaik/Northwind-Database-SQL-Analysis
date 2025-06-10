@@ -1,139 +1,70 @@
-# Northwind Database SQL Script Collection
+Northwind Database Analysis
+Database Exploration
+First, I examined the structure of two key tables:
 
-## 🔍 Basic Queries
-USE northwind;
-DESC categories;
-DESC customers;
+categories - Contains product category information
 
-text
+customers - Stores customer data including names and contact details
 
-## 🔎 Filtering & Pattern Matching
--- Customers starting with 'A'
-SELECT * FROM customers WHERE CustomerName LIKE 'a%';
+🔎 Filtering & Pattern Matching
+These queries demonstrate how to find specific customer patterns:
 
--- Customers ending with 'a'
-SELECT * FROM customers WHERE CustomerName LIKE '%a';
+Customers starting with 'A' (LIKE 'a%')
 
--- Pattern: Q followed by any char then 'e'
-SELECT * FROM customers WHERE CustomerName LIKE "Q_e%";
+Customers ending with 'a' (LIKE '%a')
 
-text
+Customers with names matching "Q followed by any character then 'e'" (LIKE "Q_e%")
 
-## 🤝 Joins & Relationships
--- Tokyo Traders products
-SELECT p.*
-FROM products p
-INNER JOIN suppliers s ON p.supplierid = s.supplierid
-WHERE s.suppliername = 'Tokyo Traders'
-ORDER BY p.productname;
+🤝 Joins & Relationships
+Key relationship queries:
 
--- Customers without orders
-SELECT c., o.
-FROM customers c
-LEFT JOIN orders o ON c.customerId = o.customerId
-WHERE o.orderid IS NULL;
+Supplier-Product Connection: Finds all products supplied by 'Tokyo Traders'
 
--- Full customer-order relationship (UNION implementation)
-SELECT * FROM customers
-LEFT JOIN orders USING(CustomerID)
-WHERE orders.CustomerID IS NOT NULL
-UNION
-SELECT * FROM customers
-RIGHT JOIN orders USING(CustomerID)
-WHERE customers.CustomerID IS NOT NULL;
+Customer-Order Analysis: Identifies customers who haven't placed any orders (using LEFT JOIN with NULL check)
 
-text
+Complete Customer-Order Relationship: Uses UNION to combine LEFT and RIGHT joins for full relationship mapping
 
-## 📊 Aggregation & Grouping
--- Country-city distribution
-SELECT
-COUNT(DISTINCT city) AS 'UniqueCities',
-country
-FROM customers
-GROUP BY Country;
+📊 Aggregation & Grouping
+Important analytical queries:
 
--- Shipper performance
-SELECT
-s.ShipperName,
-COUNT(o.OrderID) AS OrderCount
-FROM Orders o
-LEFT JOIN Shippers s USING(ShipperID)
-GROUP BY ShipperName;
+Geographic Distribution: Counts unique cities per country for customers
 
--- Product sales analysis
-SELECT
-p.ProductName,
-SUM(od.quantity) AS TotalUnits,
-SUM(od.quantity * p.price) AS TotalRevenue
-FROM products p
-JOIN order_details od USING(ProductID)
-GROUP BY p.ProductName
-ORDER BY TotalRevenue DESC;
+Shipping Performance: Shows order counts handled by each shipper
 
-text
+Product Sales: Calculates total units sold and revenue per product (sorted by revenue)
 
-## 📈 Business Reports
--- Customer geographic distribution
-SELECT
-COUNT(*) AS CustomerCount,
-country
-FROM customers
-GROUP BY country
-ORDER BY CustomerCount DESC;
+📈 Business Reports
+Valuable business insights:
 
--- Category performance
-SELECT
-c.CategoryName,
-COUNT(p.ProductID) AS ProductCount
-FROM categories c
-LEFT JOIN products p USING(CategoryID)
-GROUP BY c.CategoryName;
+Customer Geography: Shows customer counts by country (sorted high to low)
 
--- Employee order handling
-SELECT
-e.EmployeeID,
-CONCAT(e.FirstName, ' ', e.LastName) AS Name,
-COUNT(o.OrderID) AS HandledOrders
-FROM employees e
-JOIN orders o USING(EmployeeID)
-GROUP BY e.EmployeeID;
+Category Performance: Counts products in each category
 
-text
+Employee Productivity: Tracks how many orders each employee has handled
 
-## 🔗 Relationship Exploration
--- Product-supplier catalog
-SELECT DISTINCT
-s.SupplierName,
-p.ProductName
-FROM suppliers s
-JOIN products p USING(SupplierID);
+🔗 Relationship Exploration
+Relationship mapping queries:
 
--- Complete product info
-SELECT
-p.ProductName,
-c.CategoryName,
-s.SupplierName
-FROM products p
-JOIN categories c USING(CategoryID)
-JOIN suppliers s USING(SupplierID);
+Supplier-Product Catalog: Shows which suppliers provide which products
 
--- Order fulfillment details
-SELECT
-o.OrderID,
-o.OrderDate,
-c.CustomerName,
-CONCAT(e.FirstName, ' ', e.LastName) AS Handler
-FROM orders o
-JOIN customers c USING(CustomerID)
-JOIN employees e USING(EmployeeID);
+Complete Product Info: Combines product names with their categories and suppliers
 
-text
+Order Fulfillment: Details orders with customer and employee information
 
-## 💡 Key Analysis Highlights
-1. **Sales Performance** - Identify top-selling products by revenue
-2. **Customer Distribution** - Geographic spread analysis by country
-3. **Inventory Management** - Products never ordered (left joins with NULL check)
-4. **Employee Productivity** - Order handling metrics per staff member
-5. **Supplier Impact** - Product distribution across suppliers
+💡 Key Analysis Highlights
+The analysis reveals several critical business insights:
 
-✨ Tip: Use `EXPLAIN` before queries to analyze execution plans for optimization!
+Sales Performance: Identify top revenue-generating products
+
+Customer Distribution: Understand geographic customer concentrations
+
+Inventory Management: Find products never ordered
+
+Employee Productivity: Measure order handling efficiency
+
+Supplier Impact: Analyze product distribution across suppliers
+
+Pro Tip: Use EXPLAIN before queries to analyze execution plans for performance optimization! This helps identify potential bottlenecks in complex queries.
+
+These queries provide a comprehensive view of the Northwind database, covering filtering, joins, aggregations, and business reporting - essential for making data-driven decisions.
+
