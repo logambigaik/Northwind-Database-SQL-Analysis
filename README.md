@@ -252,16 +252,3 @@ ORDER BY NoOfProducts;
 1. Clone the repository.
 2. Load the `northwind` database into MySQL.
 3. Run the queries in the `.sql` or `.md` files in your SQL editor.
-
-
-- **Product prices and total quantity ordered**
-```sql
-SELECT 
-    p.ProductName, 
-    SUM(o.Quantity) AS QtyOrdered,          
-    SUM(o.Quantity * p.Price) AS TotalPrice
-FROM products p 
-JOIN order_details o ON o.ProductID = p.ProductID
-GROUP BY p.ProductName
-ORDER BY TotalPrice DESC;
-```
