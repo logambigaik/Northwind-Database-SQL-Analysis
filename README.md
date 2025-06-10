@@ -19,12 +19,12 @@ These queries demonstrate how to find specific customer patterns:
 
 - Customers ending with 'a' (`LIKE '%a'`)
 ```sql
-   select * from customers where CustomerName like '%a';
+   SELECT * FROM customers WHERE CustomerName LIKE '%a';
  ```
 
 - Customers with names matching "Q followed by any character then 'e'" (`LIKE "Q_e%"`)
 ```sql
-   select * from customers where CustomerName like "Q_e%";
+   SELECT * FROM customers WHERE CustomerName LIKE "Q_e%";
 ```
 
 ## 🤝 Joins & Relationships
