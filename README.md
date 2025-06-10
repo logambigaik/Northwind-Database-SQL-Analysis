@@ -230,6 +230,30 @@ GROUP BY c.CategoryName
 ORDER BY NoOfProducts;
 ```
 
+---
+
+## 📦 Technologies Used
+
+- MySQL
+- SQL Workbench / CLI
+
+---
+
+## ✅ Objectives
+
+- Practice SQL skills on a real-world schema.
+- Analyze population distributions, city trends, and country metrics.
+- Use pattern matching, joins, subqueries, and aggregations.
+
+---
+
+## 📌 How to Use
+
+1. Clone the repository.
+2. Load the `northwind` database into MySQL.
+3. Run the queries in the `.sql` or `.md` files in your SQL editor.
+
+
 - **Product prices and total quantity ordered**
 ```sql
 SELECT 
