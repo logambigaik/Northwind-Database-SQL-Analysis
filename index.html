@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Northwind SQL Analysis</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f8f9fa;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    details {
+      background: #fff;
+      margin: 10px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+      padding: 10px;
+    }
+    summary {
+      font-weight: bold;
+      font-size: 1.1em;
+      cursor: pointer;
+      outline: none;
+    }
+    details:hover {
+      transform: scale(1.01);
+    }
+    pre {
+      background: #eef1f5;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    code {
+      font-family: Consolas, monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>Northwind SQL Analysis</h1>
+
+  <details>
+    <summary>🔎 Filtering & Pattern Matching</summary>
+    <pre><code>-- Customers whose names start with 'A'
+SELECT * FROM customers WHERE CustomerName LIKE 'a%';
+
+-- Customers whose names end with 'a'
+SELECT * FROM customers WHERE CustomerName LIKE '%a';
+
+-- Customers whose names match pattern 'Q_e%'
+SELECT * FROM customers WHERE CustomerName LIKE 'Q_e%';
+    </code></pre>
+  </details>
+
+  <details>
+    <summary>🔗 Join Operations</summary>
+    <pre><code>-- Products supplied by "Tokyo Traders"
+SELECT * 
+FROM products
+JOIN suppliers ON products.SupplierID = suppliers.SupplierID
+WHERE SupplierName = 'Tokyo Traders'
+ORDER BY products.ProductName;
+
+-- Customers who never placed an order
+SELECT a.*, b.*
+FROM customers a
+LEFT JOIN orders b ON a.CustomerID = b.CustomerID
+WHERE b.OrderID IS NULL;
+
+-- Products that were never ordered
+SELECT *
+FROM products p
+LEFT JOIN order_details od ON p.ProductID = od.ProductID
+WHERE od.OrderID IS NULL;
+    </code></pre>
+  </details>
+
+  <details>
+    <summary>📊 Aggregations & Grouping</summary>
+    <pre><code>-- Orders count by Shipper
+SELECT Shippers.ShipperName, COUNT(Orders.OrderID) AS NumberOfOrders 
+FROM Orders
+LEFT JOIN Shippers ON Orders.ShipperID = Shippers.ShipperID
+GROUP BY ShipperName;
+
+-- Total sales per product
+SELECT 
+    a.ProductName, 
+    a.Price, 
+    SUM(b.Quantity) AS total_quantity, 
+    SUM(b.Quantity * a.Price) AS TotalSales
+FROM products a
+JOIN order_details b ON a.ProductID = b.ProductID
+GROUP BY a.ProductName, a.Price
+ORDER BY TotalSales DESC;
+    </code></pre>
+  </details>
+
+  <details>
+    <summary>🧾 Entity Relationships</summary>
+    <pre><code>-- Product, category, and supplier info
+SELECT p.ProductName, c.CategoryName, s.SupplierName
+FROM products p
+JOIN categories c ON p.CategoryID = c.CategoryID
+JOIN suppliers s ON p.SupplierID = s.SupplierID;
+
+-- Orders with customer and employee names
+SELECT o.OrderID, o.OrderDate, c.CustomerName, CONCAT(e.FirstName, ' ', e.LastName) AS EmployeeName
+FROM orders o
+JOIN customers c ON o.CustomerID = c.CustomerID
+JOIN employees e ON o.EmployeeID = e.EmployeeID;
+    </code></pre>
+  </details>
+
+</body>
+</html>
