@@ -29,23 +29,30 @@
       padding: 0 20px;
     }
 
-    .section {
+    details {
       background: white;
       border-radius: 10px;
       margin-bottom: 20px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
       transition: transform 0.3s ease;
-      padding: 20px;
+      padding: 15px 20px;
     }
 
-    .section:hover {
+    details:hover {
       transform: scale(1.02);
     }
 
-    h2 {
-      font-size: 1.25rem;
-      margin-bottom: 10px;
+    summary {
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: bold;
       color: #2b6cb0;
+      list-style: none;
+      outline: none;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
     }
 
     pre {
@@ -54,6 +61,7 @@
       border-radius: 6px;
       overflow-x: auto;
       border: 1px solid #e2e8f0;
+      margin-top: 15px;
     }
 
     code {
@@ -69,8 +77,8 @@
 
   <main>
 
-    <div class="section">
-      <h2>🔎 Filtering & Pattern Matching</h2>
+    <details>
+      <summary>🔎 Filtering & Pattern Matching</summary>
       <pre><code>-- Customers whose names start with 'A'
 SELECT * FROM customers WHERE CustomerName LIKE 'a%';
 
@@ -79,10 +87,10 @@ SELECT * FROM customers WHERE CustomerName LIKE '%a';
 
 -- Customers whose names match pattern 'Q_e%'
 SELECT * FROM customers WHERE CustomerName LIKE 'Q_e%';</code></pre>
-    </div>
+    </details>
 
-    <div class="section">
-      <h2>🔗 Join Operations</h2>
+    <details>
+      <summary>🔗 Join Operations</summary>
       <pre><code>-- Products supplied by "Tokyo Traders"
 SELECT * 
 FROM products
@@ -101,10 +109,10 @@ SELECT *
 FROM products p
 LEFT JOIN order_details od ON p.ProductID = od.ProductID
 WHERE od.OrderID IS NULL;</code></pre>
-    </div>
+    </details>
 
-    <div class="section">
-      <h2>📊 Aggregations & Grouping</h2>
+    <details>
+      <summary>📊 Aggregations & Grouping</summary>
       <pre><code>-- Orders count by Shipper
 SELECT Shippers.ShipperName, COUNT(Orders.OrderID) AS NumberOfOrders 
 FROM Orders
@@ -121,10 +129,10 @@ FROM products a
 JOIN order_details b ON a.ProductID = b.ProductID
 GROUP BY a.ProductName, a.Price
 ORDER BY TotalSales DESC;</code></pre>
-    </div>
+    </details>
 
-    <div class="section">
-      <h2>🧾 Entity Relationships</h2>
+    <details>
+      <summary>🧾 Entity Relationships</summary>
       <pre><code>-- Product, category, and supplier info
 SELECT p.ProductName, c.CategoryName, s.SupplierName
 FROM products p
@@ -136,7 +144,7 @@ SELECT o.OrderID, o.OrderDate, c.CustomerName, CONCAT(e.FirstName, ' ', e.LastNa
 FROM orders o
 JOIN customers c ON o.CustomerID = c.CustomerID
 JOIN employees e ON o.EmployeeID = e.EmployeeID;</code></pre>
-    </div>
+    </details>
 
   </main>
 
